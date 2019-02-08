@@ -14,7 +14,12 @@ public class Cercle {
     private static final Logger logger = LogManager.getLogger(Cercle.class.getName());
 
     public static void main(String[] args) {
-        int lastEventId = Integer.parseInt(args[0]); //127973 ou 127960
+        int lastEventId; //127973 ou 127960
+        try {
+            lastEventId = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            lastEventId = 127973; // Initialisation avec le dernier evenement fait à Paris la première semaine de février
+        }
         int code = 0;
         // Boucle pour tester tous les comptes du Cercle sur Paylogic
         for (String string : getSaleId()) {
@@ -30,10 +35,7 @@ public class Cercle {
                     connection.setRequestMethod("GET");
                     connection.connect();
                     code = connection.getResponseCode();
-                } catch (MalformedURLException e) {
-                    logger.error(e.getMessage(), e);
-                } catch (ProtocolException e) {
-                    logger.error(e.getMessage(), e);
+                    connection.disconnect();
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -44,9 +46,7 @@ public class Cercle {
                     if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                         try {
                             Desktop.getDesktop().browse(new URI(url.toString()));
-                        } catch (URISyntaxException e) {
-                            logger.error(e.getMessage(), e);
-                        } catch (IOException e) {
+                        } catch (URISyntaxException | IOException e) {
                             logger.error(e.getMessage(), e);
                         }
                     }
@@ -64,7 +64,7 @@ public class Cercle {
     }
 
     private static List<String> getSaleId() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add("17782");
         list.add("17783");
         list.add("16530");

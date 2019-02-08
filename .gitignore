@@ -3,3 +3,5 @@
 /target
 .idea
 cercle.iml
+jre/lib/applet/
+src/test/
